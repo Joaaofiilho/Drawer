@@ -1,21 +1,21 @@
-package Basics;
-
-import Utils.Color;
+package Elements;
 
 public class Drawer {
+    private int color;
     private Canvas canvas;
 
     void createCanvas(int width, int height) {
         canvas = new Canvas(width, height);
     }
 
-    public void drawPoint(int x, int y, int color) {
-        canvas.setPixel(0, 0, color);
+    private void drawPoint(int x, int y, int color) {
+        if(x > -1 && x < canvas.getWidth() && y > -1 && y < canvas.getHeight())
+            canvas.setPixel(x, y, color);
     }
 
-    public void drawLine(int startX, int startY, int finalX, int finalY, int color) {
+    private void drawLine(int startX, int startY, int finalX, int finalY) {
         // Iterators, counters required by algorithm
-        int x, y, dx, dy, dx1, dy1, px, py, xe, ye, i;
+        int x, y, dx, dy, dx1, dy1, px, py, xe, ye;
         // Calculate line deltas
         dx = finalX - startX;
         dy = finalY - startY;
@@ -36,7 +36,7 @@ public class Drawer {
             if(x > -1 && x < canvas.getWidth() && y > -1 && y < canvas.getHeight())
                 canvas.setPixel(x, y, color); // Draw first pixel
             // Rasterize the line
-            for (i = 0; x < xe; i++) {
+            while(x < xe) {
                 x = x + 1;
                 // Deal with octants...
                 if (px < 0) {
@@ -63,7 +63,7 @@ public class Drawer {
             }
             canvas.setPixel(x, y, color); // Draw first pixel
             // Rasterize the line
-            for (i = 0; y < ye; i++) {
+            while(y < ye) {
                 y = y + 1;
                 // Deal with octants...
                 if (py <= 0) {
@@ -84,28 +84,53 @@ public class Drawer {
         }
     }
 
-    public void drawRectangle(int x, int y, int width, int height, int color) {
+    public void drawRectangle(int x, int y, int width, int height) {
         if ((width < 0) || (height < 0)) {
             return;
         }
 
         if (height == 0 || width == 0) {
-            drawLine(x, y, x + width, y + height, color);
+            drawLine(x, y, x + width, y + height);
         } else {
-            drawLine(x, y, x + width - 1, y, color);
-            drawLine(x + width, y, x + width, y + height - 1, color);
-            drawLine(x + width, y + height, x + 1, y + height, color);
-            drawLine(x, y + height, x, y + 1, color);
+            drawLine(x, y, x + width - 1, y);
+            drawLine(x + width, y, x + width, y + height - 1);
+            drawLine(x + width, y + height, x + 1, y + height);
+            drawLine(x, y + height, x, y + 1);
         }
     }
 
-    public void fillRectangle(int x, int y, int width, int height, int color) {
-        for(; y < height; y++) {
-            drawLine(x, y, x + width, y, color);
+    public void fillRectangle(int x, int y, int width, int height) {
+        if(y < height)
+            for (; height > 0; y++, height--)
+                drawLine(x, y, x + width, y);
+        else
+            for (; height > 0; y--, height--)
+                drawLine(x, y, x + width, y);
+
+    }
+
+    public void drawCircle(int x, int y, int radius) {
+        for(double i = 0; i < 2*Math.PI; i += 0.0005*Math.PI) {
+            double nx = x + radius * Math.cos(i);
+            double ny = y + radius * Math.sin(i);
+            drawPoint((int)(nx), (int)ny, color);
         }
+    }
+
+    public void fillCircle(int x, int y, int radius) {
+        for(; radius > 0; radius--)
+            drawCircle(x, y, radius);
     }
 
     void display() {
         canvas.display();
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public int getColor() {
+        return this.color;
     }
 }

@@ -1,4 +1,4 @@
-package Basics;
+package Elements;
 
 import Utils.Color;
 
@@ -7,7 +7,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import java.awt.image.BufferedImage;
 
-public class Canvas {
+class Canvas {
     private BufferedImage image;
 
     public Canvas(int width, int height) {

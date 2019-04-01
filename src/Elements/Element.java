@@ -1,8 +1,17 @@
 package Elements;
 
-import Basics.Drawer;
+import Elements.Properties.Properties;
 
 public abstract class Element {
-    protected Drawer drawer;
-    public abstract void display();
+    protected Properties properties;
+
+    public abstract void mount(Drawer drawer);
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
+    }
 }
